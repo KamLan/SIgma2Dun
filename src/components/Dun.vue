@@ -13,7 +13,7 @@
     </div>
     <div class="col-md-12 buttons">
         <div>
-          <button class="btn btn-success" v-on:click="alert">Vérification</button>
+          <button class="btn btn-success" v-on:click="validateDUN">Vérification</button>
         </div>
         <div class="button-margin">
           <button class="btn btn-success" v-on:click="setDUN">Valider</button>
@@ -29,7 +29,8 @@
 </template>
 
 <script>
-import zebra from './../scripts/zebra.js'
+import zebra from './../scripts/zebra.js';
+var Barcoder = require('barcoder');
 export default {
   name: 'Dun',
   methods: {
@@ -45,7 +46,24 @@ export default {
     },
     setDUN: function(){
       var dun = document.getElementById('valeurDUN').value;
-      this.$store.commit('SET_DUN', dun);
+      if(dun == ''){
+        alert("Le code DUN ne peut être vide")
+        this.$router.push({path:'/dun'})
+      }
+      else{
+        this.$store.commit('SET_DUN', dun);
+        this.$router.push({path:'/dun'})
+      }
+    },
+    validateDUN: function(){
+      this.testBarcode = Barcoder.validate(this.$store.getters.DUN);
+      console.log("barcode: ", Barcoder.validate(this.$store.getters.DUN));
+      if(this.testBarcode == false){
+        alert("Le code barre n'est pas valide")
+      }
+      else{
+        alert("Le code barre est valide")
+      }
     }
   },
   computed:{

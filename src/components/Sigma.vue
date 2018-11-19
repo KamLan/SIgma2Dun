@@ -10,7 +10,7 @@
     </div>
     <div class="col-md-12 buttons">
         <div>
-          <a href="" class="btn btn-success" @click='setArticleAndVL'> <router-link to="/dun">Valider</router-link> <br></a>
+          <a href="#" class="btn btn-success" @click='setArticleAndVL'>Valider</a>
         </div>
         <div class="button-margin">
           <button href="/#/sigma" id="scanButton" class="btn btn-success" @mousedown="scan" @mouseleave="stopScan" @mouseup="stopScan" 
@@ -25,6 +25,7 @@
 
 <script> 
 import zebra from './../scripts/zebra.js'
+import router from './../router'
   export default {
     name: 'Sigma',
     data(){
@@ -41,13 +42,25 @@ import zebra from './../scripts/zebra.js'
       },
       setArticleAndVL: function(){
         var article = document.getElementById('chk_ean13').value;
-        this.$store.commit('SET_ARTICLE', article);
         var vl = document.getElementById('valeurVL').value;
-        this.$store.commit('SET_VL', vl);
+        if(article==''){
+          alert("Le code Sigma ne peut être vide")
+          this.$router.push({path:'/sigma'})
+        }
+        else if(vl==''){
+          alert("Le code VL ne peut être vide")
+          this.$router.push({path:'/sigma'})
+        }
+        else{
+          this.$store.commit('SET_ARTICLE', article);
+          this.$store.commit('SET_VL', vl);
+          console.log('article', article)
+          this.$router.push({path:'/dun'})
+        } 
       }
     },
     created(){
-      
+    
     },
     computed:{
       initializeScan(){

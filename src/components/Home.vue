@@ -12,7 +12,6 @@
         <option value="entrepot4">Entrepôt 4</option>
       </select> <br>
       <a href="" class="btn btn-success" @click="setEntrepot"> <router-link to="/sigma">Valider</router-link></a>
-      <!-- <a href="" class="btn btn-success"> <router-link to="/zebra">test</router-link> <br></a> -->
     </div>
   </div>
     
