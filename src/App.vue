@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <app-header></app-header>
+    <notifications group="foo" position='top center' width='100%' max='3'/>
     <app-date></app-date>
     <router-view></router-view>
   </div>
@@ -22,8 +23,8 @@
 </script>
 
 <style>
-img{
-  width:30%;
+.vue-notification .notification-title, .vue-notification .notification-content {
+    font-size:20px;
 }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

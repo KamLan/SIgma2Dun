@@ -1,8 +1,8 @@
 <template>
   <div class="header">
       <div class="dateTime" >
-        {{ date }} <br>
-        {{ hour }} <br>
+        {{ date }} 
+        {{ hour }}
       </div>
   </div>  
 </template>

@@ -2,29 +2,40 @@
   <div class="dun">
     <h4>Scan du code Dun</h4>
     <div class="entrepot">
-      <input  class="form-control" type="text" v-model="showEntrepot" value="Entrepôt 2 - Libellé" disabled>
+      <input  class="form-control form-dis" type="text" v-model="showEntrepot" value="Entrepôt 2 - Libellé" disabled>
     </div>
     <div class="article">
-      <input  class="form-control" type="text" v-model="showArticle" value="Article - BBBBB BBB 0000000000000000" disabled>
-      <input  class="form-control" type="text" v-model="showVL" value="EAN - BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB" disabled>
-    </div> <br>
+      <input  class="form-control form-dis" type="number" v-model="showArticle" value="Article - BBBBB BBB 0000000000000000" disabled>
+      <input  class="form-control form-dis" type="number" v-model="showVL" value="EAN - BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB" disabled>
+    </div> 
     <div class="div-dun">
-      <input  class="form-control" type="text" placeholder="DUN" id="valeurDUN"> <br>
+      <input  class="form-control" type="number" onclick="this.select()"  v-model="showDUN" placeholder="DUN" id="valeurDUN"> 
     </div>
     <div class="col-md-12 buttons">
-        <div>
+        <!-- <div>
           <button class="btn btn-success" v-on:click="validateDUN">Vérification</button>
-        </div>
-        <div class="button-margin">
-          <button class="btn btn-success" v-on:click="setDUN">Valider</button>
+        </div> -->
+        <div >
+          <button class="btn btn-success" v-on:click="setDUN">
+            <img src=".././assets/checked.png" alt="">
+          </button>
         </div>
         <div class="button-margin">
           <button href="/#/dun" id="scanButton" class="btn btn-success" @mousedown="scan" @mouseleave="stopScan" @mouseup="stopScan" 
-          @touchstart="scan" @touchend="stopScan" @touchcancel="stopScan">Scanner</button>
+          @touchstart="scan" @touchend="stopScan" @touchcancel="stopScan">
+            <img src=".././assets/barcode.png" alt="">
+          </button>
         </div>
-    </div> <br>
-       <a href="" class="btn btn-success"> <router-link to="/sigma">retour</router-link> <br></a>
-       <a href="" class="btn btn-success button-margin"> <router-link to="/sigma">Nouvelle association</router-link> <br></a>
+        <div class="button-margin">
+           <button href="" class="btn btn-success"> 
+              <router-link to="/sigma">
+                <img src=".././assets/undo-button.png" alt="">
+              </router-link>
+            </button>
+        </div>
+    </div>
+      
+       <!-- <a href="" class="btn btn-success button-margin" v-on:click="clearState" > <router-link to="/sigma">Nouvelle association</router-link> <br></a> -->
   </div>
 </template>
 
@@ -34,48 +45,82 @@ var Barcoder = require('barcoder');
 export default {
   name: 'Dun',
   methods: {
-    alert: function () {
-      alert('Contrôle OK ')
-    },
+    //start scanner
     scan: function(){
       zebra.app.initialize();
       zebra.startSoftTrigger();
     },
+    //stop scanner
     stopScan: function(){
       zebra.stopSoftTrigger();
     },
+    //Check if DUN code is valid
+    validateDUN: function(dun){
+      this.testBarcode = Barcoder.validate(dun);
+      //console.log("barcode: ", Barcoder.validate(this.$store.getters.DUN));
+      if(this.testBarcode == false){
+        this.$notify({
+          group: 'foo',
+          type: 'error',
+          title: 'Success',
+          text: "Le code barre n'est pas valide",
+        })
+      }
+      else{
+        this.$notify({
+          group: 'foo',
+          type: 'success',
+          title: 'Success',
+          text: "Le code barre est valide",
+        })
+        this.$notify({
+          group: 'foo',
+          type: 'success',
+          title: 'Success',
+          text: "L'association est réalisée",
+        })
+         this.clearState()
+         this.$router.push({path:'/sigma'})
+      }
+    },
+    //Save DUN in the store
     setDUN: function(){
       var dun = document.getElementById('valeurDUN').value;
       if(dun == ''){
-        alert("Le code DUN ne peut être vide")
+       this.$notify({
+          group: 'foo',
+          type: 'error',
+          title: 'Success',
+          text: "Le code DUN ne peut être vide",
+        })
         this.$router.push({path:'/dun'})
       }
       else{
         this.$store.commit('SET_DUN', dun);
-        this.$router.push({path:'/dun'})
+        this.validateDUN(dun);
       }
     },
-    validateDUN: function(){
-      this.testBarcode = Barcoder.validate(this.$store.getters.DUN);
-      console.log("barcode: ", Barcoder.validate(this.$store.getters.DUN));
-      if(this.testBarcode == false){
-        alert("Le code barre n'est pas valide")
-      }
-      else{
-        alert("Le code barre est valide")
-      }
+    //Clean the store states for new association
+    clearState: function(){
+      this.$store.commit('SET_ARTICLE', '');
+      this.$store.commit('SET_VL', '');
+       this.$store.commit('SET_DUN', '');
     }
   },
   computed:{
+      //Displpay saved entrepot state
       showEntrepot() {
         return this.$store.getters.ENTREPOT;
       },
+      //Displpay saved article state
       showArticle(){
         return this.$store.getters.ARTICLE; 
       }, 
+      //Displpay saved VL state
       showVL(){
         return this.$store.getters.VL;
       }, 
+      //Displpay saved DUN state
       showDUN(){
         return this.$store.getters.DUN;
       } 
@@ -85,12 +130,26 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+div.dun{
+   margin-top:10%;
+}
 h3 {
   margin: 40px 0 0;
 }
 input{
-  width: 80%;
-  margin-left:10%;
+  width: 90%;
+  height:90px;
+  margin-left:5%;
+}
+input.form-dis{
+  height:60px;
+}
+button{
+  padding-top:10px;
+  padding-bottom:10px;
+}
+button img{
+  width:60px;
 }
 a{
   color:white;

@@ -1,11 +1,6 @@
 <template>
   <div>
     <H3>Association Code SIGMA avec code DUN 14</H3>
-    <div class="header">
-      <div class="logo">
-        <img alt="Vue logo" src="./../assets/logo.png">
-      </div>
-    </div>
   </div>
     
 </template>
