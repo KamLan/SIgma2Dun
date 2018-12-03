@@ -62,7 +62,7 @@ export default {
         this.$notify({
           group: 'foo',
           type: 'error',
-          title: 'Success',
+          title: 'Erreur',
           text: "Le code barre n'est pas valide",
         })
       }
@@ -90,8 +90,8 @@ export default {
        this.$notify({
           group: 'foo',
           type: 'error',
-          title: 'Success',
-          text: "Le code DUN ne peut être vide",
+          title: 'Erreur',
+          text: "Le code DUN ne peut être pas vide",
         })
         this.$router.push({path:'/dun'})
       }

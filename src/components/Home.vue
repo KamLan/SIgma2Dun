@@ -23,47 +23,61 @@
   export default {
     name: 'Home',
     methods:{
-       writeFile: function(fileEntry, dataObj) {
+       writeFile(fileEntry, dataObj) {
           // Create a FileWriter object for our FileEntry (log.txt).
           fileEntry.createWriter(function (fileWriter) {
 
               fileWriter.onwriteend = function() {
-                  console.log("Successful file write...");
+                 // eslint-disable-next-line
+                  console.log("Successful file read...");
                   readFile(fileEntry);
               };
 
               fileWriter.onerror = function (e) {
-                  console.log("Failed file write: " + e.toString());
+                 // eslint-disable-next-line
+                  console.log("Failed file read: " + e.toString());
               };
 
-              // If data object is not passed in,
-              // create a new Blob instead.
-              if (!dataObj) {
-                  dataObj = new Blob(['some file data'], { type: 'text/plain' });
+              // If we are appending data to file, go to the end of the file.
+              if (isAppend) {
+                  try {
+                      fileWriter.seek(fileWriter.length);
+                  }
+                  catch (e) {
+                     // eslint-disable-next-line
+                      console.log("file doesn't exist!");
+                  }
               }
-
               fileWriter.write(dataObj);
           });
       },
-      createCSVFile: function(){
-        var path = "/sdcard/Download/Sigma2DUN/files/"
+      FileInitiation: function(){
+        var path = "file///sdcard/Download/Sigma2DUN/files/"
         var fileName = "test.csv"
-        window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-          console.log('file system open: ' + fs.name);
-          fs.root.getFile(fileName, { create: true, exclusive: false }, function (fileEntry) {
-              console.log("fileEntry is file?" + fileEntry.isFile.toString());
-              fileEntry.name == fileName
-              fileEntry.fullPath == path
-              this.writeFile(fileEntry, 'coucou');
-          });
-        });
+        document.addEventListener("deviceready", onDeviceReady, false);
+        function onDeviceReady() {
+           // eslint-disable-next-line
+          console.log("External directory ",cordova.file.externalDataDirectory)
+          window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(dir) {
+            console.log("got maind dir ", dir)
+            dir.getFile("zog.txt", {create:true}, function(file){
+              console.log("got the file ", file);
+            })
+          })
+        }
+      },
+      createFile: function(dirEntry, fileName){
+        dirEntry.getFile(fileName, {create: true, exclusive:false}, function(fileEntry){
+          this.writeFile(fileEntry, null)
+        })
       },
        //Save the entrepot state
       setEntrepot: function(){
         var e = document.getElementById('entrepotValeur');
         var entrepot = e.options[e.selectedIndex].value;
         this.$store.commit('SET_ENTREPOT', entrepot);
-        this.createCSVFile()
+        this.FileInitiation()
+        this.$router.push({path:'/sigma'});
       }
     },
     computed:{

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <app-header></app-header>
-    <notifications group="foo" position='top center' width='100%' max='3'/>
+    <notifications group="foo" position='top center' width='100%' />
     <app-date></app-date>
     <router-view></router-view>
   </div>
@@ -13,11 +13,23 @@
   export default {
     name: 'app',
     methods:{
-        
+      onSuccessGeoloc(){
+        alert("success")
+      },
+      onErrorGeoloc(){
+        alert("error")
+      },
     },
     components: {
+      // eslint-disable-next-line
       appHeader: Header,
+      // eslint-disable-next-line
       appDate: DateVue
+    },
+    created: {
+      geoloc(){
+        navigator.geolocation.getCurrentPosition(onSuccessGeoloc, onErrorGeoloc);
+      }
     }
   }
 </script>

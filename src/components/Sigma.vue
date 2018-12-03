@@ -5,13 +5,15 @@
       <input class="form-control" type="text" v-model="showEntrepot" value="Entrepôt 2 - Libellé" disabled>
     </div>
     <div class="article">
-      <input class="form-control" type="number" onclick="this.select()" v-model="showArticle" placeholder="Selection Article" id="chk_ean13">
-      <input type="number"  class="form-control" onclick="this.select()" v-model="showVL" placeholder="Selection VL" id="valeurVL"> 
+      <input class="form-control" type="number" onkeypress="if(this.value.length>=13) { return false;}"  oninput="if(this.value.length>=3) { this.value = this.value.slice(0,13); }"  maxlength="13" 
+      onclick="this.select()" v-model="showArticle" placeholder="Selection Article" id="chk_ean13">
+      <input type="number" onkeypress="if(this.value.length>=3) { return false;}" 
+      oninput="if(this.value.length>=3) { this.value = this.value.slice(0,3); }" class="form-control" onclick="this.select()" 
+      v-model="showVL" placeholder="Selection VL" id="valeurVL"> 
     </div>
     <div class="col-md-12 buttons">
         <div>
           <button href="#" class="btn btn-success" @click='setArticleAndVL'>
-            <font-awesome-icon icon="coffee"/>
             <img src=".././assets/checked.png" alt="">
           </button>
         </div>
