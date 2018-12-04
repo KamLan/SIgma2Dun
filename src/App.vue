@@ -12,25 +12,12 @@
   import DateVue from './components/Date.vue';
   export default {
     name: 'app',
-    methods:{
-      onSuccessGeoloc(){
-        alert("success")
-      },
-      onErrorGeoloc(){
-        alert("error")
-      },
-    },
     components: {
       // eslint-disable-next-line
       appHeader: Header,
       // eslint-disable-next-line
       appDate: DateVue
     },
-    created: {
-      geoloc(){
-        navigator.geolocation.getCurrentPosition(onSuccessGeoloc, onErrorGeoloc);
-      }
-    }
   }
 </script>
 

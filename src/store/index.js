@@ -11,6 +11,7 @@ export const store = new Vuex.Store({
     ean: null,
     dun: null,
     date: null,
+    geoloc: null
   },
   getters : {
     ENTREPOT : state => {
@@ -30,6 +31,9 @@ export const store = new Vuex.Store({
     },
     DATE : state => {
       return state.date;
+    },
+    GEOLOC : state => {
+      return state.geoloc
     }
   },
   mutations: {
@@ -50,6 +54,9 @@ export const store = new Vuex.Store({
     },
     SET_DATE: (state, payload) => {
       state.date = payload
+    },
+    SET_GEOLOC: (state, payload) => {
+      state.geoloc = payload
     }
   },
   actions : {}  
