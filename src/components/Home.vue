@@ -37,7 +37,7 @@ export default {
       }, fail);
     },
     //method grouping creation, writing and checking the file
-    FileInitiation: function() {
+    FileInitiation: function(position) {
       document.addEventListener("deviceready", onDeviceReady, false);
 
       function onDeviceReady() {
@@ -50,7 +50,7 @@ export default {
               console.log("got the file ", file);
               var logOb = file;
               if (!logOb) return;
-              var str = "coucou";
+              var str = "Geolocation: "+ "latitude: "+position.latitude+ "longitude: " +position.longitude+ ";" + "Entrepot 1";
               var log = str + "; [" + new Date() + "]\n";
               console.log("going to log " + log);
               logOb.createWriter(function(fileWriter) {
@@ -58,7 +58,7 @@ export default {
 
                 var blob = new Blob([log], { type: "text/plain" });
                 fileWriter.write(blob);
-                console.log("ok, in theory i worked");
+                //console.log("ok, in theory i worked");
               });
 
               logOb.file(function(file) {
@@ -75,53 +75,79 @@ export default {
         );
       }
     },
+    //Get geolocation data
+    getGeoloc: function(){
+      document.addEventListener("deviceready", onDeviceReady, false);
+
+      function onDeviceReady() {
+        if (!navigator.geolocation) {
+          console.log("plugin not working");
+          alert("Error: Plugin not working!");
+        } else {
+          console.log("plugin working");
+          navigator.geolocation.getCurrentPosition(onSuccess, onError, {
+            timeout: 3000
+          });
+        }
+
+        function onSuccess(position) {
+          console.log("position", position);
+          var geoloc =
+            "latitude: " +
+            position.latitude +
+            ", longitude: " +
+            position.longitude;
+            //create file and log geolocation
+            console.log("External directory ", cordova.file.externalDataDirectory);
+            window.resolveLocalFileSystemURL(
+              cordova.file.externalDataDirectory,
+              function(dir) {
+                console.log("got maind dir ", dir.nativeURL);
+                dir.getFile("log.csv", { create: true }, function(file) {
+                  console.log("got the file ", file);
+                  var logOb = file;
+                  if (!logOb) return;
+                  var str = "Geolocation: "+ "latitude: "+position.coords.latitude+ " longitude: " +position.coords.longitude+ ";" + "Entrepot 1";
+                  var log = str + "; [" + new Date() + "]\n";
+                  console.log("going to log " + log);
+                  logOb.createWriter(function(fileWriter) {
+                    fileWriter.seek(fileWriter.length);
+
+                    var blob = new Blob([log], { type: "text/plain" });
+                    fileWriter.write(blob);
+                    //console.log("ok, in theory i worked");
+                  });
+
+                  logOb.file(function(file) {
+                    var reader = new FileReader();
+
+                    reader.onloadend = function(e) {
+                      console.log(this.result);
+                    };
+
+                    reader.readAsText(file);
+                  });
+                });
+              }
+            );
+        }
+
+        function onError(error) {
+          alert(
+            "code: " + error.code + "\n" + "message: " + error.message + "\n"
+          );
+        }
+      }
+    },
     //Save the entrepot state
     setEntrepot: function() {
       var e = document.getElementById("entrepotValeur");
       var entrepot = e.options[e.selectedIndex].value;
       this.$store.commit("SET_ENTREPOT", entrepot);
-      this.FileInitiation();
+      this.getGeoloc();
+      //this.FileInitiation();
       this.$router.push({ path: "/sigma" });
     },
-    saveGeoloc() {
-      return this.$store.commit("SET_GEOLOC", geoloc);
-    },
-    getGeolocValue() {
-      return this.$store.getters.GEOLOC;
-    }
-  },
-  created() {
-    //Get geolocation
-    document.addEventListener("deviceready", onDeviceReady, false);
-
-    function onDeviceReady() {
-      if (!navigator.geolocation) {
-        console.log("plugin not working");
-        alert("Error: Plugin not working!");
-      } else {
-        console.log("plugin working");
-        navigator.geolocation.getCurrentPosition(onSuccess, onError, {
-          timeout: 1000
-        });
-      }
-
-      function onSuccess(position) {
-        console.log("position", position);
-        var geoloc =
-          "latitude: " +
-          position.latitude +
-          ", longitude: " +
-          position.longitude;
-        this.saveGeoloc();
-        console.log("stored Geoloc: ", this.getGeolocValue());
-      }
-
-      function onError(error) {
-        alert(
-          "code: " + error.code + "\n" + "message: " + error.message + "\n"
-        );
-      }
-    }
   },
   computed: {
     //Display saved entrepot state

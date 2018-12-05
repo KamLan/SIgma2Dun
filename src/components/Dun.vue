@@ -74,10 +74,18 @@
 </template>
 
 <script>
+ /* eslint-disable */
 import zebra from "./../scripts/zebra.js";
 var Barcoder = require("barcoder");
 export default {
   name: "Dun",
+  data() {
+    return {
+      Entrepot: this.$store.getters.ENTREPOT,
+      Article : this.$store.getters.ARTICLE,
+      Vl: this.$store.getters.VL,
+    };
+  },
   methods: {
     //start scanner
     scan: function() {
@@ -99,6 +107,7 @@ export default {
           title: "Erreur",
           text: "Le code barre n'est pas valide"
         });
+        return false;
       } else {
         this.$notify({
           group: "foo",
@@ -112,8 +121,8 @@ export default {
           title: "Success",
           text: "L'association est réalisée"
         });
-        this.clearState();
         this.$router.push({ path: "/sigma" });
+        return true;
       }
     },
     //Save DUN in the store
@@ -129,13 +138,23 @@ export default {
         this.$router.push({ path: "/dun" });
       } else {
         this.$store.commit("SET_DUN", dun);
-        this.validateDUN(dun);
-        this.writeFileAssociation();
-      }
+        var DunVaild = this.validateDUN(dun);
+        if(DunVaild == true){
+          var Article = this.$store.getters.ARTICLE;
+          var Dun = this.$store.getters.DUN;
+          var Vl = this.$store.getters.VL;
+          this.writeFileAssociation(Article, Dun, Vl);
+          this.clearState();
+        }
+        else{
+          
+        }
+      }  
     },
-    writeFileAssociation: function() {
+    //Write association in the log file
+    writeFileAssociation: function(article, dun, vl) {
       document.addEventListener("deviceready", onDeviceReady, false);
-
+      console.log("in dat function", article, dun, vl)
       function onDeviceReady() {
         console.log("External directory ", cordova.file.externalDataDirectory);
         window.resolveLocalFileSystemURL(
@@ -146,8 +165,9 @@ export default {
               console.log("got the file ", file);
               var logOb = file;
               if (!logOb) return;
-              var str = "coucou";
-              var log = str + "; [" + new Date() + "]\n";
+
+              var str = "Article: " + article + ";" + "Dun: " + dun + ";" + "Vl: " + vl + ";";
+              var log = str + " [" + new Date() + "]\n";
               console.log("going to log " + log);
               logOb.createWriter(function(fileWriter) {
                 fileWriter.seek(fileWriter.length);
@@ -195,6 +215,9 @@ export default {
     showDUN() {
       return this.$store.getters.DUN;
     }
+  },
+  mounted() {
+    document.getElementById("valeurDUN").focus();
   }
 };
 </script>

@@ -14,7 +14,8 @@
       <input
         class="form-control"
         type="number"
-        onkeypress="if(this.value.length>=13) { return false;}"
+        onkeypress="if(this.value.length==13) { document.getElementById('valeurVL').focus() ;}"
+        onkeyup="if(this.value.length>=13) { document.getElementById('valeurVL').focus() ;}"
         oninput="if(this.value.length>=3) { this.value = this.value.slice(0,13); }"
         maxlength="13"
         onclick="this.select()"
@@ -24,7 +25,6 @@
       >
       <input
         type="number"
-        onkeypress="if(this.value.length>=3) { return false;}"
         oninput="if(this.value.length>=3) { this.value = this.value.slice(0,3); }"
         class="form-control"
         onclick="this.select()"
@@ -35,7 +35,7 @@
     </div>
     <div class="col-md-12 buttons">
       <div>
-        <button href="#" class="btn btn-success" @click="setArticleAndVL">
+        <button href="#" class="btn btn-success" @click="setArticleAndVL" id="buttonValidation">
           <img src=".././assets/checked.png" alt>
         </button>
       </div>
@@ -66,6 +66,7 @@
 </template>
 
 <script>
+ /* eslint-disable */
 import zebra from "./../scripts/zebra.js";
 export default {
   name: "Sigma",
@@ -111,7 +112,9 @@ export default {
       }
     }
   },
-  created() {},
+  mounted() {
+    document.getElementById("chk_ean13").focus();
+  },
   computed: {
     //initialize device for scan
     initializeScan() {

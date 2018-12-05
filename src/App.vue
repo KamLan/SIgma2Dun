@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <app-header></app-header>
-    <notifications group="foo" position='top center' width='100%' />
+    <notifications group="foo" position='top center' max="3" width='100%' />
     <app-date></app-date>
     <router-view></router-view>
   </div>
@@ -17,7 +17,7 @@
       appHeader: Header,
       // eslint-disable-next-line
       appDate: DateVue
-    },
+    }
   }
 </script>
 
