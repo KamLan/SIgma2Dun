@@ -17,6 +17,8 @@
       appHeader: Header,
       // eslint-disable-next-line
       appDate: DateVue
+    },
+    methods:{
     }
   }
 </script>

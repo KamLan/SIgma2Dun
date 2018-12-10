@@ -14,10 +14,10 @@
       <input
         class="form-control"
         type="number"
-        onkeypress="if(this.value.length==13) { document.getElementById('valeurVL').focus() ;}"
-        onkeyup="if(this.value.length>=13) { document.getElementById('valeurVL').focus() ;}"
-        oninput="if(this.value.length>=3) { this.value = this.value.slice(0,13); }"
-        maxlength="13"
+        onkeypress="if(this.value.length==6) { document.getElementById('valeurVL').focus() ;}"
+        onkeyup="if(this.value.length>=6) { document.getElementById('valeurVL').focus() ;}"
+        oninput="if(this.value.length>=6) { this.value = this.value.slice(0,6); }"
+        maxlength="6"
         onclick="this.select()"
         v-model="showArticle"
         placeholder="Selection Article"
@@ -68,11 +68,13 @@
 <script>
  /* eslint-disable */
 import zebra from "./../scripts/zebra.js";
+import json from "./../json/article.json";
 export default {
   name: "Sigma",
   data() {
     return {
-      Entrepot: this.$store.getters.ENTREPOT
+      Entrepot: this.$store.getters.ENTREPOT,
+      myJson: json
     };
   },
   methods: {
@@ -86,9 +88,9 @@ export default {
     },
     //Save the article and VL states + check if inputs are empty
     setArticleAndVL: function() {
-      var article = document.getElementById("chk_ean13").value;
+      var ean = document.getElementById("chk_ean13").value;
       var vl = document.getElementById("valeurVL").value;
-      if (article == "") {
+      if (ean == "") {
         //this.$router.push({path:'/sigma'});
         this.$notify({
           group: "foo",
@@ -106,11 +108,44 @@ export default {
           text: "Le code VL ne peut être vide"
         });
       } else {
-        this.$store.commit("SET_ARTICLE", article);
-        this.$store.commit("SET_VL", vl);
-        this.$router.push({ path: "/dun" });
+        this.checkArticle(ean, vl);
       }
-    }
+    },
+    //Check if the article exist
+    checkArticle(ean, vl){
+      var articleExist = false;
+      for(var i = 0; i < json.length; i++){
+        if(ean == json[i].AR_CPROIN){
+          console.log("its a simple match !")
+          if(vl == json[i].AR_ILOGIS){
+            console.log("its a perfect match !")
+            articleExist = true;
+             this.$notify({
+              group: "foo",
+              type: "success",
+              title: "Succès",
+              text: "Un article correspondant trouvé"
+            });
+            var article = json[i].AR_LIBPRO;
+            this.$store.commit("SET_ARTICLE", article);
+            this.$store.commit("SET_EAN", ean);
+            this.$store.commit("SET_VL", vl);
+            this.$router.push({ path: "/dun" });
+          }
+        }
+        else{
+          
+        }
+      }
+      if(articleExist == false){
+        this.$notify({
+         group: "foo",
+         type: "error",
+         title: "Erreur",
+         text: "Aucun article trouvé"
+       });
+      }
+    },
   },
   mounted() {
     document.getElementById("chk_ean13").focus();
@@ -128,7 +163,7 @@ export default {
     },
     //Displpay saved article state
     showArticle() {
-      return this.$store.getters.ARTICLE;
+      return this.$store.getters.EAN;
     },
     //Displpay saved VL state
     showVL() {
@@ -139,7 +174,7 @@ export default {
       return this.$store.getters.DUN;
     }
   }
-};
+}
 </script>
 
 

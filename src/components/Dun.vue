@@ -13,7 +13,7 @@
     <div class="article">
       <input
         class="form-control form-dis"
-        type="number"
+        type="text"
         v-model="showArticle"
         value="Article - BBBBB BBB 0000000000000000"
         disabled
@@ -194,6 +194,7 @@ export default {
     //Clean the store states for new association
     clearState: function() {
       this.$store.commit("SET_ARTICLE", "");
+      this.$store.commit("SET_EAN", "");
       this.$store.commit("SET_VL", "");
       this.$store.commit("SET_DUN", "");
     }
@@ -205,6 +206,7 @@ export default {
     },
     //Displpay saved article state
     showArticle() {
+      console.log("store: ", this.$store)
       return this.$store.getters.ARTICLE;
     },
     //Displpay saved VL state

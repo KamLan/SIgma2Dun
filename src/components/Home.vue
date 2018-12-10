@@ -20,6 +20,7 @@
 <script>
 /* eslint-disable */
 import Vue from "vue";
+import Papa from "papaparse";
 export default {
   name: "Home",
   methods: {
@@ -154,6 +155,11 @@ export default {
     showEntrepot: function() {
       return this.$store.getters.ENTREPOT;
     }
+  },
+  created(){
+    var file = cordova.file.externalDataDirectory+"/parseFile.csv"
+    Papa.parse(file, {delimiter: ";"})
+    console.log("papaparse is okay")
   }
 };
 </script>
