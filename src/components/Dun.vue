@@ -141,9 +141,10 @@ export default {
         var DunVaild = this.validateDUN(dun);
         if(DunVaild == true){
           var Article = this.$store.getters.ARTICLE;
+          var ean = this.$store.getters.EAN;
           var Dun = this.$store.getters.DUN;
           var Vl = this.$store.getters.VL;
-          this.writeFileAssociation(Article, Dun, Vl);
+          this.writeFileAssociation(Article, Dun, Vl, ean);
           this.clearState();
         }
         else{
@@ -152,7 +153,7 @@ export default {
       }  
     },
     //Write association in the log file
-    writeFileAssociation: function(article, dun, vl) {
+    writeFileAssociation: function(article, dun, vl, ean) {
       document.addEventListener("deviceready", onDeviceReady, false);
       console.log("in dat function", article, dun, vl)
       function onDeviceReady() {
@@ -166,7 +167,7 @@ export default {
               var logOb = file;
               if (!logOb) return;
 
-              var str = "Article: " + article + ";" + "Dun: " + dun + ";" + "Vl: " + vl + ";";
+              var str = "ean: " + ean + ";" + "Article: " + article + ";" + "Dun: " + dun + ";" + "Vl: " + vl + ";";
               var log = str + " [" + new Date() + "]\n";
               console.log("going to log " + log);
               logOb.createWriter(function(fileWriter) {
