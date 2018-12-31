@@ -101,6 +101,9 @@ export default {
       this.testBarcode = Barcoder.validate(dun);
       //console.log("barcode: ", Barcoder.validate(this.$store.getters.DUN));
       if (this.testBarcode == false) {
+        var input = document.getElementById('valeurDUN');
+        input.focus();
+        input.select();
         this.$notify({
           group: "foo",
           type: "error",

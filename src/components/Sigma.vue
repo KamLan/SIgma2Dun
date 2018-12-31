@@ -20,7 +20,7 @@
         maxlength="6"
         onclick="this.select()"
         v-model="showArticle"
-        placeholder="Selection Article"
+        placeholder="Selection Sigma"
         id="chk_ean13"
       >
       <input
@@ -120,12 +120,12 @@ export default {
           if(vl == json[i].AR_ILOGIS){
             console.log("its a perfect match !")
             articleExist = true;
-             this.$notify({
-              group: "foo",
-              type: "success",
-              title: "Succès",
-              text: "Un article correspondant trouvé"
-            });
+            //  this.$notify({
+            //   group: "foo",
+            //   type: "success",
+            //   title: "Succès",
+            //   text: "Un article correspondant trouvé"
+            // });
             var article = json[i].AR_LIBPRO;
             this.$store.commit("SET_ARTICLE", article);
             this.$store.commit("SET_EAN", ean);
@@ -138,6 +138,9 @@ export default {
         }
       }
       if(articleExist == false){
+        var input = document.getElementById('chk_ean13');
+        input.focus();
+        input.select();
         this.$notify({
          group: "foo",
          type: "error",
