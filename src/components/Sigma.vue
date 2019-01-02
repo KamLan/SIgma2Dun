@@ -14,8 +14,7 @@
       <input
         class="form-control"
         type="number"
-        onkeypress="if(this.value.length==6) { document.getElementById('valeurVL').focus() ;}"
-        onkeyup="if(this.value.length>=6) { document.getElementById('valeurVL').focus() ;}"
+        onkeyup="if(this.value.length>=6) { document.getElementById('valeurVL').focus(); document.getElementById('valeurVL').select();}"
         oninput="if(this.value.length>=6) { this.value = this.value.slice(0,6); }"
         maxlength="6"
         onclick="this.select()"

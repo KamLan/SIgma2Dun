@@ -1,6 +1,6 @@
 <template>
   <div>
-    <H3>Association Code SIGMA avec code DUN 14</H3>
+    <H3>Association SIGMA - DUN</H3>
   </div>
     
 </template>
