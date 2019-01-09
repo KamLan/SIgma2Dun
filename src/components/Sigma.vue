@@ -24,7 +24,8 @@
       >
       <input
         type="number"
-        oninput="if(this.value.length>=3) { this.value = this.value.slice(0,3); }"
+        oninput="if(this.value.length>=3) { this.value = this.value.slice(0,3); document.getElementById('buttonValidation').focus(); }"
+        onkeyup="if(this.value.length>=3) { this.value = this.value.slice(0,3); document.getElementById('buttonValidation').focus(); }"
         class="form-control"
         onclick="this.select()"
         v-model="showVL"

@@ -86,7 +86,7 @@ export default {
           alert("Error: Plugin not working!");
         } else {
           console.log("plugin working");
-          navigator.geolocation.getCurrentPosition(onSuccess, onError, {
+          navigator.geolocation.getCurrentPosition(onSuccess, {
             timeout: 3000
           });
         }
@@ -133,11 +133,11 @@ export default {
             );
         }
 
-        function onError(error) {
-          alert(
-            "code: " + error.code + "\n" + "message: " + error.message + "\n"
-          );
-        }
+        // function onError(error) {
+        //   alert(
+        //     "code: " + error.code + "\n" + "message: " + error.message + "\n"
+        //   );
+        // }
       }
     },
     //Save the entrepot state
